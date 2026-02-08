@@ -39,6 +39,13 @@ def evaluate_model(model, X_test, y_test):
         "MCC": matthews_corrcoef(y_test, y_pred),
         "AUC": roc_auc_score(y_adj, y_proba, multi_class="ovr")
     }
+
+    # Try AUC only if class counts match 
+    try: 
+        metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class="ovr") 
+    except ValueError:
+        metrics["AUC"] = None
+
     return metrics
 
 
