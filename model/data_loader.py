@@ -3,22 +3,20 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 def load_data(path="data/covtype.csv"):
-    """
-    Load the Forest Cover Type dataset from CSV.
-    
-    Parameters
-    ----------
-    path : str
-        Path to the dataset CSV file.
-    
-    Returns
-    -------
-    X : DataFrame
-        Feature matrix
-    y : Series
-        Target labels
-    """
-    df = pd.read_csv(path)
+    # Column names from UCI documentation
+    columns = [
+        "Elevation", "Aspect", "Slope", "Horizontal_Distance_To_Hydrology",
+        "Vertical_Distance_To_Hydrology", "Horizontal_Distance_To_Roadways",
+        "Hillshade_9am", "Hillshade_Noon", "Hillshade_3pm",
+        "Horizontal_Distance_To_Fire_Points"
+    ] + [f"Wilderness_Area_{i}" for i in range(4)] \
+      + [f"Soil_Type_{i}" for i in range(40)] \
+      + ["Cover_Type"]
+
+    # Load dataset without header, then assign column names
+    df = pd.read_csv(path, header=None)
+    df.columns = columns
+
     X = df.drop("Cover_Type", axis=1)
     y = df["Cover_Type"]
     return X, y
