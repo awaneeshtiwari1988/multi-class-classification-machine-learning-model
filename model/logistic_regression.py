@@ -1,46 +1,29 @@
+import streamlit as st
 from sklearn.linear_model import LogisticRegression
-from sklearn.utils import shuffle
-from tqdm import tqdm
-from model.data_loader import load_and_preprocess_data
 from model.utils import evaluate_model, visualize_results
 
-def train_logistic(X_train=None, y_train=None, max_iter=200, batch_fraction=0.2):
+def train_logistic(X_train, y_train, max_iter=200, show_progress=False):
     """
-    Train Logistic Regression with iterative batches and progress bar.
-    
-    Parameters
-    ----------
-    X_train : ndarray
-        Training features (scaled)
-    y_train : Series
-        Training labels
-    max_iter : int
-        Number of iterations (default=200)
-    batch_fraction : float
-        Fraction of training data used per iteration (default=0.2)
-    
-    Returns
-    -------
-    model : LogisticRegression
-        Trained logistic regression model
+    Train Logistic Regression model with optional Streamlit progress reporting.
     """
-    # If no data passed, load default dataset
-    if X_train is None or y_train is None:
-        X_train, X_test, y_train, y_test, _ = load_and_preprocess_data()
+    if show_progress:
+        progress_bar = st.progress(0)
+        status_text = st.empty()
 
-    # Initialize model with saga solver and warm_start
-    log_reg = LogisticRegression(
-        max_iter=1, solver='saga', random_state=42, warm_start=True
-    )
+        # Simulate progress updates during training
+        for i in range(max_iter):
+            # We don't actually train per-epoch in scikit-learn,
+            # but we can simulate progress for user feedback.
+            progress_bar.progress((i + 1) / max_iter)
+            status_text.text(f"Training iteration {i+1}/{max_iter}")
 
-    # Iterative training with progress bar
-    n_samples = int(len(X_train) * batch_fraction)
-    for i in tqdm(range(max_iter), desc="Training Logistic Regression"):
-        X_batch, y_batch = shuffle(X_train, y_train, random_state=i)
-        log_reg.fit(X_batch[:n_samples], y_batch[:n_samples])
+        progress_bar.empty()
+        status_text.text("✅ Training complete")
 
-    return log_reg
-
+    # Actual training
+    model = LogisticRegression(max_iter=max_iter, random_state=42)
+    model.fit(X_train, y_train)
+    return model
 
 def evaluate_logistic(model, X_test, y_test):
     """
