@@ -23,7 +23,7 @@ def evaluate_model(model, X_test, y_test):
     }
 
     # Only compute AUC if class counts match
-    if len(np.unique(y_test)) == y_proba.shape[1]:
+    if set(model.classes_) == set(np.unique(y_test)):
         metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class="ovr")
     else:
         metrics["AUC"] = None
