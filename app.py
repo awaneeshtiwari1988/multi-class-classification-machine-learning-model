@@ -37,9 +37,10 @@ if run_button:
     # -------------------------------
     # Train model
     # -------------------------------
-    st.subheader("Training Progress")
+    progress_placeholder = st.empty() 
+    progress_placeholder.subheader("Training Progress")
     if model_choice == "Logistic Regression":
-        model = logistic_regression.train_logistic(X_train_scaled, y_train, max_iter=200, show_progress=True)
+        model = logistic_regression.train_logistic(X_train_scaled, y_train, max_iter=200, batch_fraction=0.2)
     elif model_choice == "Decision Tree":
         model = decision_tree.train_decision_tree(X_train_scaled, y_train)
     elif model_choice == "KNN":
@@ -50,11 +51,17 @@ if run_button:
         model = random_forest.train_random_forest(X_train_scaled, y_train)
     elif model_choice == "XGBoost":
         model = xgboost.train_xgboost(X_train_scaled, y_train)
+    # Once training completes, update the placeholder 
+    progress_placeholder.subheader("✅ Training completed")
 
     # -------------------------------
     # Evaluate + Visualize
     # -------------------------------
+    eval_placeholder = st.empty() 
+    eval_placeholder.subheader("Evaluation started...")
     metrics = evaluate_model(model, X_test_scaled, y_test)
+    eval_placeholder.subheader("✅ Evaluation completed")
+    
     st.subheader("Evaluation Metrics")
     st.write(pd.DataFrame(metrics, index=["Score"]).T)
 

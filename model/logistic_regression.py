@@ -3,27 +3,22 @@ from sklearn.linear_model import LogisticRegression
 from model.utils import evaluate_model, visualize_results
 import time
 
-def train_logistic(X_train, y_train, max_iter=1000, show_progress=False):
+def train_logistic(X_train, y_train, max_iter=1000, batch_fraction=0.2):
     """
     Train Logistic Regression model with optional Streamlit progress reporting.
     """
-    if show_progress:
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-
-        # Simulated progress bar (UI feedback only)
-        for i in range(100):
-            time.sleep(0.02)
-            progress_bar.progress(i + 1)
-            status_text.text(f"Training... {i+1}%")
-
-        progress_bar.empty()
-        status_text.text("✅ Training complete")
-
-    # Actual training with higher max_iter
-    model = LogisticRegression(max_iter=max_iter, solver="saga", random_state=42)
-    model.fit(X_train, y_train)
-    return model
+    # Initialize model with saga solver and warm_start
+    log_reg = LogisticRegression(
+        max_iter=1, solver='saga', random_state=42, warm_start=True
+    )
+    
+    # Iterative training with progress bar
+    n_samples = int(len(X_train) * batch_fraction)
+    for i in tqdm(range(max_iter), desc="Training Logistic Regression"):
+        X_batch, y_batch = shuffle(X_train, y_train, random_state=i)
+        log_reg.fit(X_batch[:n_samples], y_batch[:n_samples])
+    
+    return log_reg
 
 def evaluate_logistic(model, X_test, y_test):
     """
