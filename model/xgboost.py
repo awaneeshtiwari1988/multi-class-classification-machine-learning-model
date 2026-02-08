@@ -20,7 +20,6 @@ def train_xgboost(X_train, y_train, n_estimators=100, max_depth=6, learning_rate
         max_depth=max_depth,
         learning_rate=learning_rate,
         random_state=random_state,
-        use_label_encoder=False,
         eval_metric="mlogloss"
     )
     y_train_adj = y_train - 1
