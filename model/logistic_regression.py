@@ -1,7 +1,8 @@
 import streamlit as st
 from sklearn.linear_model import LogisticRegression
 from model.utils import evaluate_model, visualize_results
-import time
+from tqdm import tqdm
+from sklearn.utils import shuffle
 
 def train_logistic(X_train, y_train, max_iter=1000, batch_fraction=0.2):
     """
