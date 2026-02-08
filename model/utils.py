@@ -12,21 +12,33 @@ import streamlit as st
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)
 
     metrics = {
         "Accuracy": accuracy_score(y_test, y_pred),
-        "Precision": precision_score(y_test, y_pred, average="weighted", zero_division=0),
-        "Recall": recall_score(y_test, y_pred, average="weighted", zero_division=0),
-        "F1": f1_score(y_test, y_pred, average="weighted", zero_division=0),
-        "MCC": matthews_corrcoef(y_test, y_pred),
+        "Precision": precision_score(y_test, y_pred, average="weighted"),
+        "Recall": recall_score(y_test, y_pred, average="weighted"),
+        "F1 Score": f1_score(y_test, y_pred, average="weighted"),
+        "MCC": matthews_corrcoef(y_test, y_pred)
     }
 
-    # Only compute AUC if class counts match
-    if set(model.classes_) == set(np.unique(y_test)):
-        metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class="ovr")
-    else:
+    # Handle AUC for multi-class
+    try:
+        if hasattr(model, "predict_proba"):
+            y_proba = model.predict_proba(X_test)
+
+            # Align labels if they don’t start at 0
+            y_test_adj = y_test
+            if y_test.min() != 0:
+                y_test_adj = y_test - y_test.min()
+
+            metrics["AUC"] = roc_auc_score(
+                y_test_adj, y_proba, multi_class="ovr", average="weighted"
+            )
+        else:
+            metrics["AUC"] = None
+    except Exception as e:
         metrics["AUC"] = None
+        print("AUC calculation failed:", e)
 
     return metrics
 
