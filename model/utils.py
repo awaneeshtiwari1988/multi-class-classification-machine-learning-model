@@ -21,18 +21,8 @@ def evaluate_model(model, X_test, y_test):
         "MCC": matthews_corrcoef(y_test, y_pred)
     }
 
-    if hasattr(model, "predict_proba"): 
-        y_proba = model.predict_proba(X_test) 
-        y_test_adj = pd.Series(y_test).map( {cls: i for i, cls in enumerate(model.classes_)} ) 
-        
-        try: metrics["AUC"] = roc_auc_score(y_test_adj, 
-                                            y_proba, multi_class="ovr", 
-                                            average="weighted" ) 
-        except Exception as e: 
-            metrics["AUC"] = None
-            print("AUC calculation failed:", e)
-    else: 
-        metrics["AUC"] = None
+    metrics["ROC AUC"] = roc_auc_score(y_test, model.predict_proba(X_test), multi_class='ovr')
+
     return metrics
 
 
