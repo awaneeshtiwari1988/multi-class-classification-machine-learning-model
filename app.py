@@ -4,6 +4,11 @@ import pandas as pd
 from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
 from model.data_loader import load_data, preprocess_data
 import model.utils as utils
+import warnings
+
+# Suppress common warnings globally
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 st.title("🌲 Multi-Class Classification with ML Models")
 st.write("Choose to upload your own dataset or run directly on the inbuilt **forest_cover_data**.")
@@ -44,11 +49,11 @@ if run_button:
     elif model_choice == "Decision Tree":
         model = decision_tree.train_decision_tree(X_train_scaled, y_train)
     elif model_choice == "KNN":
-        model = knn.train_knn(X_train_scaled, y_train)
+        model = knn.train_knn(X_train_scaled, y_train, n_neighbors=7, weights="distance")
     elif model_choice == "Naive Bayes":
         model = naive_bayes.train_naive_bayes(X_train_scaled, y_train)
     elif model_choice == "Random Forest":
-        model = random_forest.train_random_forest(X_train_scaled, y_train, n_estimators=200, max_depth=10)
+        model = random_forest.train_random_forest(X_train_scaled, y_train, n_estimators=200, criterion="entropy")
     elif model_choice == "XGBoost":
         model = xgboost.train_xgboost(X_train_scaled, y_train, n_estimators=300, learning_rate=0.05)
     

@@ -1,6 +1,6 @@
 from sklearn.neighbors import KNeighborsClassifier
 
-def train_knn(X_train, y_train, n_neighbors=5, weights="uniform"):
+def train_knn(X_train, y_train, n_neighbors=5, weights="uniform", metric="minkowski"):
     """
     Train a K-Nearest Neighbors classifier.
     
@@ -19,6 +19,12 @@ def train_knn(X_train, y_train, n_neighbors=5, weights="uniform"):
     -------
     model : KNeighborsClassifier
     """
-    knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights=weights)
-    knn.fit(X_train, y_train)
-    return knn
+    knn_clf = KNeighborsClassifier(
+        n_neighbors=n_neighbors,
+        weights=weights,
+        metric=metric
+    )
+    
+    knn_clf.fit(X_train, y_train)
+    
+    return knn_clf

@@ -1,6 +1,6 @@
 from sklearn.tree import DecisionTreeClassifier
 
-def train_decision_tree(X_train, y_train, max_depth=None, random_state=42):
+def train_decision_tree(X_train, y_train, criterion="gini", max_depth=None):
     """
     Train a Decision Tree classifier.
     
@@ -19,6 +19,12 @@ def train_decision_tree(X_train, y_train, max_depth=None, random_state=42):
     -------
     model : DecisionTreeClassifier
     """
-    dt = DecisionTreeClassifier(max_depth=max_depth, random_state=random_state)
-    dt.fit(X_train, y_train)
-    return dt
+    dt_clf = DecisionTreeClassifier(
+        criterion=criterion,
+        max_depth=max_depth,
+        random_state=42
+    )
+    
+    dt_clf.fit(X_train, y_train)
+    
+    return dt_clf
