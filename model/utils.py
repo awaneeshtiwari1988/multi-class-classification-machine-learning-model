@@ -9,41 +9,21 @@ from sklearn.metrics import (
 from sklearn.preprocessing import label_binarize
 
 def evaluate_model(model, X_test, y_test):
-    """
-    Evaluate a trained model with standard metrics.
-    
-    Parameters
-    ----------
-    model : fitted classifier
-    X_test : ndarray
-        Test features (scaled)
-    y_test : Series
-        Test labels
-    
-    Returns
-    -------
-    metrics : dict
-        Dictionary of evaluation metrics (Accuracy, AUC, Precision, Recall, F1, MCC)
-    """
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)
 
-    # Adjust labels if they start from 1 (Forest Cover dataset)
-    y_adj = y_test - 1 if y_test.min() == 1 else y_test
-
     metrics = {
         "Accuracy": accuracy_score(y_test, y_pred),
-        "Precision": precision_score(y_test, y_pred, average="weighted"),
-        "Recall": recall_score(y_test, y_pred, average="weighted"),
-        "F1": f1_score(y_test, y_pred, average="weighted"),
+        "Precision": precision_score(y_test, y_pred, average="weighted", zero_division=0),
+        "Recall": recall_score(y_test, y_pred, average="weighted", zero_division=0),
+        "F1": f1_score(y_test, y_pred, average="weighted", zero_division=0),
         "MCC": matthews_corrcoef(y_test, y_pred),
-        "AUC": roc_auc_score(y_adj, y_proba, multi_class="ovr")
     }
 
-    # Try AUC only if class counts match 
-    try: 
-        metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class="ovr") 
-    except ValueError:
+    # Only compute AUC if class counts match
+    if len(np.unique(y_test)) == y_proba.shape[1]:
+        metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class="ovr")
+    else:
         metrics["AUC"] = None
 
     return metrics
