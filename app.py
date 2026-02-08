@@ -1,8 +1,15 @@
 import streamlit as st
 import pandas as pd
-from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
+from model import logistic_regression
+#from model import decision_tree
+#from model import knn
+#from model import naive_bayes
+#from model import random_forest
+#from model import xgboost
+
 from model.data_loader import load_data, preprocess_data
 from model.utils import evaluate_model, visualize_results
+
 
 # -------------------------------
 # Streamlit UI
