@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-from model import logistic_regression
+from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
 from model.data_loader import load_data, preprocess_data
-from model.utils import evaluate_model, visualize_results
+import model.utils as utils
 
 st.title("🌲 Multi-Class Classification with ML Models")
 st.write("Choose to upload your own dataset or run directly on the inbuilt **forest_cover_data**.")
@@ -48,10 +48,10 @@ if run_button:
     elif model_choice == "Naive Bayes":
         model = naive_bayes.train_naive_bayes(X_train_scaled, y_train)
     elif model_choice == "Random Forest":
-        model = random_forest.train_random_forest(X_train_scaled, y_train)
+        model = random_forest.train_random_forest(X_train_scaled, y_train, n_estimators=200, max_depth=10)
     elif model_choice == "XGBoost":
-        model = xgboost.train_xgboost(X_train_scaled, y_train)
-    # Once training completes, update the placeholder 
+        model = xgboost.train_xgboost(X_train_scaled, y_train, n_estimators=300, learning_rate=0.05)
+    
     progress_placeholder.subheader("✅ Training completed")
 
     # -------------------------------
@@ -59,11 +59,11 @@ if run_button:
     # -------------------------------
     eval_placeholder = st.empty() 
     eval_placeholder.subheader("Evaluation started...")
-    metrics = evaluate_model(model, X_test_scaled, y_test)
+    metrics = utils.evaluate_model(model, X_test_scaled, y_test)
     eval_placeholder.subheader("✅ Evaluation completed")
 
     st.subheader("Evaluation Metrics")
     st.write(pd.DataFrame(metrics, index=["Score"]).T)
 
     st.subheader("Visualizations")
-    visualize_results(model, X_test_scaled, y_test, model_choice)
+    utils.visualize_results(model, X_test_scaled, y_test, model_choice)
