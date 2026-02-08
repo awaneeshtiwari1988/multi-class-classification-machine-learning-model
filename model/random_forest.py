@@ -1,7 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 
-def train_random_forest(X_train, y_train, n_estimators=100, criterion="gini", max_depth=None, 
-                        random_state=42):
+def train_random_forest(X_train, y_train, n_estimators=100, max_depth=None, random_state=42):
     """
     Train a Random Forest classifier.
     
@@ -14,13 +13,10 @@ def train_random_forest(X_train, y_train, n_estimators=100, criterion="gini", ma
     random_state : int
         Random seed
     """
-    rf_clf = RandomForestClassifier(
+    rf = RandomForestClassifier(
         n_estimators=n_estimators,
-        criterion=criterion,
         max_depth=max_depth,
-        random_state=random_state,
-        n_jobs=-1   # use all cores for faster training
+        random_state=random_state
     )
-    
-    rf_clf.fit(X_train, y_train)
-    return rf_clf
+    rf.fit(X_train, y_train)
+    return rf
