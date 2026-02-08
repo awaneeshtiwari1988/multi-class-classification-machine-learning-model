@@ -60,11 +60,3 @@ def preprocess_data(X, y, test_size=0.2, random_state=42):
     X_test_scaled = scaler.transform(X_test)
     
     return X_train_scaled, X_test_scaled, y_train, y_test
-
-
-def load_and_preprocess_data(path="data/covtype.csv", test_size=0.2, random_state=42):
-    """
-    Convenience wrapper to load and preprocess data in one step.
-    """
-    X, y = load_data(path)
-    return preprocess_data(X, y, test_size=test_size, random_state=random_state)
