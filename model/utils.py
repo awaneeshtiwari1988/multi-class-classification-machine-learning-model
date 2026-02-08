@@ -8,6 +8,7 @@ from sklearn.metrics import (
     confusion_matrix, classification_report, roc_curve, auc
 )
 from sklearn.preprocessing import label_binarize
+import streamlit as st
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -55,7 +56,8 @@ def visualize_results(model, X_test, y_test, title="Model"):
     plt.title(f"Confusion Matrix - {title}")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
-    plt.show()
+    #plt.show()
+    st.pyplot(plt)
 
     # Classification Report Heatmap
     report = classification_report(y_test, y_pred, output_dict=True)
@@ -63,7 +65,8 @@ def visualize_results(model, X_test, y_test, title="Model"):
     plt.figure(figsize=(10,6))
     sns.heatmap(df.iloc[:-1, :-1], annot=True, cmap="YlGnBu")
     plt.title(f"Classification Report Heatmap - {title}")
-    plt.show()
+    #plt.show()
+    st.pyplot(plt)
 
     # ROC Curve (multi-class)
     y_bin = label_binarize(y_test, classes=classes)
@@ -76,4 +79,5 @@ def visualize_results(model, X_test, y_test, title="Model"):
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.legend()
-    plt.show()
+    #plt.show()
+    st.pyplot(plt)
