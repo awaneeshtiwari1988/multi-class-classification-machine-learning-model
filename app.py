@@ -32,7 +32,7 @@ if run_button:
         X, y = load_data("data/covtype.csv")
 
     # Preprocess
-    X_train_scaled, X_test_scaled, y_train, y_test, scaler = preprocess_data(X, y)
+    X_train_scaled, X_test_scaled, y_train, y_test = preprocess_data(X, y)
 
     # -------------------------------
     # Train model
@@ -61,7 +61,7 @@ if run_button:
     eval_placeholder.subheader("Evaluation started...")
     metrics = evaluate_model(model, X_test_scaled, y_test)
     eval_placeholder.subheader("✅ Evaluation completed")
-    
+
     st.subheader("Evaluation Metrics")
     st.write(pd.DataFrame(metrics, index=["Score"]).T)
 

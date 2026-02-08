@@ -40,7 +40,7 @@ def preprocess_data(X, y, test_size=0.2, random_state=42):
     
     Returns
     -------
-    X_train_scaled, X_test_scaled, y_train, y_test, scaler
+    X_train_scaled, X_test_scaled, y_train, y_test
     """
     # Check class distribution 
     unique, counts = np.unique(y, return_counts=True)
@@ -59,7 +59,7 @@ def preprocess_data(X, y, test_size=0.2, random_state=42):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    return X_train_scaled, X_test_scaled, y_train, y_test, scaler
+    return X_train_scaled, X_test_scaled, y_train, y_test
 
 
 def load_and_preprocess_data(path="data/covtype.csv", test_size=0.2, random_state=42):

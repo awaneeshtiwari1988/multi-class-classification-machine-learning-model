@@ -46,6 +46,7 @@ def visualize_results(model, X_test, y_test, title="Model"):
     """
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)
+    classes = model.classes_
 
     # Confusion Matrix
     cm = confusion_matrix(y_test, y_pred)
@@ -65,12 +66,11 @@ def visualize_results(model, X_test, y_test, title="Model"):
     plt.show()
 
     # ROC Curve (multi-class)
-    y_adj = y_test - 1 if y_test.min() == 1 else y_test
-    y_bin = label_binarize(y_adj, classes=list(range(len(set(y_adj)))))
+    y_bin = label_binarize(y_test, classes=classes)
     plt.figure(figsize=(10,8))
-    for i in range(y_bin.shape[1]):
-        fpr, tpr, _ = roc_curve(y_bin[:, i], y_proba[:, i])
-        plt.plot(fpr, tpr, label=f"Class {i+1} (AUC={auc(fpr,tpr):.2f})")
+    for i in range(len(classes)): 
+        fpr, tpr, _ = roc_curve(y_bin[:, i], y_proba[:, i]) 
+        plt.plot(fpr, tpr, label=f"Class {classes[i]} (AUC={auc(fpr,tpr):.2f})")
     plt.plot([0,1],[0,1],'k--')
     plt.title(f"ROC Curve - {title}")
     plt.xlabel("False Positive Rate")
