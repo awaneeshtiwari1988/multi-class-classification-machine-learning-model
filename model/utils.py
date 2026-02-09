@@ -23,12 +23,20 @@ def evaluate_model(model, X_test, y_test):
 
     if hasattr(model, "predict_proba"): 
         y_proba = model.predict_proba(X_test) 
-        y_test_adj = pd.Series(y_test).map( {cls: i for i, cls in enumerate(model.classes_)} ) 
-        
-        try: metrics["AUC"] = roc_auc_score(y_test_adj, 
-                                            y_proba, multi_class="ovr") 
-        except Exception as e: 
-            metrics["AUC"] = None
+        y_test_adj = pd.Series(y_test).map({cls: i for i, cls in enumerate(model.classes_)}) 
+        try: 
+            auc_macro = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro") 
+            auc_micro = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro") 
+            # Simple average (equal weight) 
+            auc_combined = (auc_macro + auc_micro) / 2 
+            
+            # Or weighted average (favor micro if dataset is imbalanced) 
+            alpha = 0.7 # weight for micro 
+            auc_combined = alpha * auc_micro + (1 - alpha) * auc_macro
+            metrics["AUC"] = auc_combined
+        except ValueError as e: 
+            metrics["AUC_macro"] = None 
+            metrics["AUC_micro"] = None 
             print("AUC calculation failed:", e)
     else: 
         metrics["AUC"] = None
