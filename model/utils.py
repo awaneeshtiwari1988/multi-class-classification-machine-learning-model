@@ -37,7 +37,7 @@ def evaluate_model(model, X_test, y_test):
         except ValueError as e: 
             metrics["AUC_macro"] = None 
             metrics["AUC_micro"] = None 
-            print("AUC calculation failed:", e)
+            st.write("AUC calculation failed:", e)
     else: 
         metrics["AUC"] = None
     return metrics
