@@ -16,11 +16,11 @@ def load_data(path="data/covtype.csv"):
           + ["Cover_Type"]
 
     # Load dataset without header, then assign column names
-    df = pd.read_csv(path, header=None)
-    df.columns = columns
+    data = pd.read_csv(path)
+    data.columns = columns
 
-    X = df.drop("Cover_Type", axis=1)
-    y = df["Cover_Type"]
+    X = data.drop("Cover_Type", axis=1)
+    y = data["Cover_Type"]
     return X, y
 
 

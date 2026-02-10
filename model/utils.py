@@ -40,8 +40,7 @@ def evaluate_model(model, X_test, y_test, y_train=None):
             metrics["AUC_micro"] = None
         else:
             try:
-                metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro")
-                metrics["AUC_micro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro")
+                metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr")
             except ValueError as e:
                 metrics["AUC_macro"] = None
                 metrics["AUC_micro"] = None
