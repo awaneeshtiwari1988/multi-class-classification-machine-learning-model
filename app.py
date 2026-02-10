@@ -59,7 +59,7 @@ if run_button:
     # -------------------------------
     eval_placeholder = st.empty() 
     eval_placeholder.subheader("Evaluation started...")
-    metrics = utils.evaluate_model(model, X_test_scaled, y_test)
+    metrics = utils.evaluate_model(model, X_test_scaled, y_test, y_train=y_train)
     eval_placeholder.subheader("✅ Evaluation completed")
 
     st.subheader("Evaluation Metrics")

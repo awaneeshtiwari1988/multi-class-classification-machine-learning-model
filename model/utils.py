@@ -1,3 +1,4 @@
+from operator import le
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -10,7 +11,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import LabelEncoder, label_binarize
 import streamlit as st
 
-def evaluate_model(model, X_test, y_test):
+def evaluate_model(model, X_test, y_test, y_train=None):
     y_pred = model.predict(X_test)
 
     metrics = {
@@ -21,27 +22,36 @@ def evaluate_model(model, X_test, y_test):
         "MCC": matthews_corrcoef(y_test, y_pred)
     }
 
-
     if hasattr(model, "predict_proba"):
         y_proba = model.predict_proba(X_test)
 
         # Safer label encoding
         le = LabelEncoder()
-        le.fit(model.classes_)  # ensure alignment
+        if y_train is not None:
+            le.fit(np.concatenate([y_train, y_test]))
+        else:
+            le.fit(y_test)  # fallback
+
         y_test_adj = le.transform(y_test)
 
-        try:
-            metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro")
-            metrics["AUC_micro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro")
-        except ValueError as e:
+        if np.isnan(y_test_adj).any():
+            st.error("y_test contains labels not seen in training. Cannot compute AUC.")
             metrics["AUC_macro"] = None
             metrics["AUC_micro"] = None
-            st.error(f"AUC calculation failed: {e}")
+        else:
+            try:
+                metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro")
+                metrics["AUC_micro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro")
+            except ValueError as e:
+                metrics["AUC_macro"] = None
+                metrics["AUC_micro"] = None
+                st.error(f"AUC calculation failed: {e}")
     else:
         metrics["AUC_macro"] = None
         metrics["AUC_micro"] = None
 
     return metrics
+
 
 
 def visualize_results(model, X_test, y_test, title="Model"):
