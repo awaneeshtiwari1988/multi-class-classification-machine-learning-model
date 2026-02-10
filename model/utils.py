@@ -7,7 +7,7 @@ from sklearn.metrics import (
     f1_score, matthews_corrcoef, roc_auc_score,
     confusion_matrix, classification_report, roc_curve, auc
 )
-from sklearn.preprocessing import label_binarize
+from sklearn.preprocessing import LabelEncoder, label_binarize
 import streamlit as st
 
 def evaluate_model(model, X_test, y_test):
@@ -21,25 +21,26 @@ def evaluate_model(model, X_test, y_test):
         "MCC": matthews_corrcoef(y_test, y_pred)
     }
 
-    if hasattr(model, "predict_proba"): 
-        y_proba = model.predict_proba(X_test) 
-        y_test_adj = pd.Series(y_test).map({cls: i for i, cls in enumerate(model.classes_)}) 
-        try: 
-            auc_macro = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro") 
-            auc_micro = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro") 
-            # Simple average (equal weight) 
-            auc_combined = (auc_macro + auc_micro) / 2 
-            
-            # Or weighted average (favor micro if dataset is imbalanced) 
-            alpha = 0.7 # weight for micro 
-            auc_combined = alpha * auc_micro + (1 - alpha) * auc_macro
-            metrics["AUC"] = auc_combined
-        except ValueError as e: 
-            metrics["AUC_macro"] = None 
-            metrics["AUC_micro"] = None 
-            st.write("AUC calculation failed:", e)
-    else: 
-        metrics["AUC"] = None
+
+    if hasattr(model, "predict_proba"):
+        y_proba = model.predict_proba(X_test)
+
+        # Safer label encoding
+        le = LabelEncoder()
+        le.fit(model.classes_)  # ensure alignment
+        y_test_adj = le.transform(y_test)
+
+        try:
+            metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro")
+            metrics["AUC_micro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro")
+        except ValueError as e:
+            metrics["AUC_macro"] = None
+            metrics["AUC_micro"] = None
+            st.error(f"AUC calculation failed: {e}")
+    else:
+        metrics["AUC_macro"] = None
+        metrics["AUC_micro"] = None
+
     return metrics
 
 
