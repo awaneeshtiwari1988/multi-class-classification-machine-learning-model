@@ -11,8 +11,15 @@ from sklearn.metrics import (
 from sklearn.preprocessing import LabelEncoder, label_binarize
 import streamlit as st
 
-def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
+def evaluate_model(model, X_test, y_test, label_offset=1):
+    # Shift labels for AUC calculation 
+    y_test_adj = y_test - label_offset
+    # Predictions 
+    y_pred_adj = model.predict(X_test) 
+    y_proba = model.predict_proba(X_test)
+
+    # Restore predictions to original label space 
+    y_pred = y_pred_adj + label_offset
 
     metrics = {
         "Accuracy": accuracy_score(y_test, y_pred),
@@ -23,11 +30,9 @@ def evaluate_model(model, X_test, y_test):
     }
 
     y_proba = model.predict_proba(X_test)
-    metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class='ovr')
+    metrics["AUC"] = roc_auc_score(y_test_adj, y_proba, multi_class='ovr')
 
     return metrics
-
-
 
 def visualize_results(model, X_test, y_test, title="Model"):
     """

@@ -59,7 +59,12 @@ if run_button:
     # -------------------------------
     eval_placeholder = st.empty() 
     eval_placeholder.subheader("Evaluation started...")
-    metrics = utils.evaluate_model(model, X_test_scaled, y_test)
+    # For models like XGBoost that require 0-based labels, pass label_offset=1 
+    if model_choice == "XGBoost": 
+        metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=1) 
+    else: 
+        metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=0)
+
     eval_placeholder.subheader("✅ Evaluation completed")
 
     st.subheader("Evaluation Metrics")
