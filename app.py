@@ -29,7 +29,7 @@ if run_button:
         X, y = load_data(uploaded_file)
     else:
         st.info("No file uploaded. Running model on the inbuilt dataset: **forest_cover_data**")
-        X, y = load_data("data/covtype.csv")
+        X, y = load_data("covtype.csv")
 
     # Preprocess
     X_train_scaled, X_test_scaled, y_train, y_test = preprocess_data(X, y)
