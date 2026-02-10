@@ -22,38 +22,8 @@ def evaluate_model(model, X_test, y_test):
         "MCC": matthews_corrcoef(y_test, y_pred)
     }
 
-    if hasattr(model, "predict_proba"):
-        y_proba = model.predict_proba(X_test)
-
-        # 🔹 Clean y_test before AUC calculation
-        valid_classes = set(model.classes_)  # expected {1,2,3,4,5,6,7}
-        y_test_clean = pd.Series(y_test).astype(int)
-        y_test_clean = y_test_clean[y_test_clean.isin(valid_classes)]
-
-        # Map labels to indices
-        mapping = {cls: i for i, cls in enumerate(model.classes_)}
-        y_test_adj = y_test_clean.map(mapping)
-
-        # Align y_proba with cleaned y_test
-        mask = ~y_test_adj.isna()
-        y_test_adj = y_test_adj[mask]
-        y_proba = y_proba[mask]
-
-        try:
-            if len(np.unique(y_test_adj)) == y_proba.shape[1]:
-                metrics["AUC_macro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="macro")
-                metrics["AUC_micro"] = roc_auc_score(y_test_adj, y_proba, multi_class="ovr", average="micro")
-            else:
-                st.error("Mismatch: y_test classes != y_proba columns")
-                metrics["AUC_macro"] = None
-                metrics["AUC_micro"] = None
-        except ValueError as e:
-            metrics["AUC_macro"] = None
-            metrics["AUC_micro"] = None
-            st.error(f"AUC calculation failed: {e}")
-    else:
-        metrics["AUC_macro"] = None
-        metrics["AUC_micro"] = None
+    y_proba = model.predict_proba(X_test)
+    metrics["AUC"] = roc_auc_score(y_test, y_proba, multi_class='ovr')
 
     return metrics
 
