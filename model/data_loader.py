@@ -24,7 +24,7 @@ def load_data(path="data/covtype.csv"):
     return X, y
 
 
-def preprocess_data(X, y, test_size=0.2, random_state=42):
+def preprocess_data(X, y):
     """
     Split and scale the dataset.
     
@@ -52,7 +52,7 @@ def preprocess_data(X, y, test_size=0.2, random_state=42):
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=stratify
+        X, y, test_size=0.2, random_state=42, stratify=y
     )
     
     # Scale features
