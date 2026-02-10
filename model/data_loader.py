@@ -58,5 +58,8 @@ def preprocess_data(X, y, test_size=0.2, random_state=42):
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
+    print("Train shape:", X_train.shape, y_train.shape)
+    print("Test shape:", X_test.shape, y_test.shape)
+    print("Unique classes:", y.unique())
     
     return X_train_scaled, X_test_scaled, y_train, y_test
