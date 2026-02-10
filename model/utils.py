@@ -8,7 +8,7 @@ from sklearn.metrics import (
     f1_score, matthews_corrcoef, roc_auc_score,
     confusion_matrix, classification_report, roc_curve, auc
 )
-from sklearn.preprocessing import LabelEncoder, label_binarize
+from sklearn.preprocessing import label_binarize
 import streamlit as st
 
 def evaluate_model(model, X_test, y_test, label_offset=1):
