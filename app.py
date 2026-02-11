@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-
-from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
 from model.data_loader import load_data, preprocess_data, load_uploaded_data
 import model.utils as utils
 
@@ -31,7 +29,7 @@ if run_button:
         X_train_scaled, X_test_scaled_default, y_train, y_test_default, scaler = preprocess_data(X, y)
 
         # Load uploaded test data and scale with same scaler 
-        X_test_uploaded, y_test_uploaded = utils.load_uploaded_test_data(uploaded_file)
+        X_test_uploaded, y_test_uploaded = load_uploaded_data(uploaded_file)
         X_test_scaled = scaler.transform(X_test_uploaded)
         y_test = y_test_uploaded
     else:
