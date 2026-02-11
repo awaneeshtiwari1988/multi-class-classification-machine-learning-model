@@ -1,6 +1,5 @@
 import streamlit as st
 from sklearn.linear_model import LogisticRegression
-from model.utils import evaluate_model, visualize_results
 from tqdm import tqdm
 from sklearn.utils import shuffle
 
@@ -20,16 +19,3 @@ def train_logistic(X_train, y_train, max_iter=1000, batch_fraction=0.2):
         log_reg.fit(X_batch[:n_samples], y_batch[:n_samples])
     
     return log_reg
-
-def evaluate_logistic(model, X_test, y_test):
-    """
-    Evaluate Logistic Regression model with standard metrics.
-    """
-    return evaluate_model(model, X_test, y_test)
-
-
-def visualize_logistic(model, X_test, y_test):
-    """
-    Visualize Logistic Regression performance (confusion matrix, report, ROC).
-    """
-    visualize_results(model, X_test, y_test, "Logistic Regression")
