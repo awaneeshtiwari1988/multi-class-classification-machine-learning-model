@@ -79,7 +79,7 @@ def preprocess_data(X, y):
     
     Returns
     -------
-    X_train_scaled, X_test_scaled, y_train, y_test
+    X_train_scaled, X_test_scaled, y_train, y_test, scaler
     """
 
     # Train-test split
@@ -92,4 +92,4 @@ def preprocess_data(X, y):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    return X_train_scaled, X_test_scaled, y_train, y_test
+    return X_train_scaled, X_test_scaled, y_train, y_test, scaler
