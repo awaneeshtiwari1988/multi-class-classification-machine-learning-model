@@ -69,8 +69,5 @@ def preprocess_data(X, y):
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-    st.write("Train shape:", X_train.shape, y_train.shape)
-    st.write("Test shape:", X_test.shape, y_test.shape)
-    st.write("Unique classes:", list(y.unique()))
     
     return X_train_scaled, X_test_scaled, y_train, y_test
