@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import joblib
 from model.data_loader import load_data, preprocess_data, load_uploaded_data
 import model.utils as utils
 
@@ -15,20 +16,32 @@ model_choice = st.sidebar.selectbox(
 # File uploader
 uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
+# -----------------------------
+# Helper functions
+# -----------------------------
+def load_model(model_choice):
+    """Load pretrained model from .pkl files."""
+    filename_map = {
+        "Logistic Regression": "models/logistic_regression.pkl",
+        "Decision Tree": "models/decision_tree.pkl",
+        "KNN": "models/knn.pkl",
+        "Naive Bayes": "models/naive_bayes.pkl",
+        "Random Forest": "models/random_forest.pkl",
+        "XGBoost": "models/xgboost.pkl"
+    }
+    return joblib.load(filename_map[model_choice])
+
+use_pretrained = st.sidebar.checkbox("Use Pretrained Models (.pkl)", value=True)
+
 # Execution button
 run_button = st.button("Run Model")
 
 if run_button:
+    scaler = joblib.load("models/scaler.pkl")
     # -------------------------------
     # Data loading logic
     # -------------------------------
     if uploaded_file is not None:
-        st.success("Using uploaded file for training and evaluation.")
-        # Train on default dataset 
-        X, y = load_data("covtype.csv")
-        X_train_scaled, X_test_scaled_default, y_train, y_test_default, scaler = preprocess_data(X, y)
-
-        # Load uploaded test data and scale with same scaler 
         X_test_uploaded, y_test_uploaded = load_uploaded_data(uploaded_file)
         X_test_scaled = scaler.transform(X_test_uploaded)
         y_test = y_test_uploaded
@@ -42,7 +55,11 @@ if run_button:
     # -------------------------------
     progress_placeholder = st.empty() 
     progress_placeholder.subheader("Training Progress")
-    model = utils.train_model(model_choice, X_train_scaled, y_train)
+    if use_pretrained:
+        model = load_model(model_choice)
+    else:
+        # Train fresh if needed (optional demonstration)
+        model = utils.train_model(model_choice, X_test_scaled, y_test)
     progress_placeholder.subheader("✅ Training completed")
 
     # -------------------------------
@@ -51,11 +68,7 @@ if run_button:
     eval_placeholder = st.empty() 
     eval_placeholder.subheader("Evaluation started...")
     # For models like XGBoost that require 0-based labels, pass label_offset=1 
-    if model_choice == "XGBoost": 
-        metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=1) 
-    else: 
-        metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=0)
-
+    metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=1 if model_choice == "XGBoost" else 0)
     eval_placeholder.subheader("✅ Evaluation completed")
 
     st.subheader("Evaluation Metrics")
