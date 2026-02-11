@@ -10,7 +10,12 @@ def load_uploaded_data(uploaded_file):
     as the default covtype dataset.
     """
     # Read uploaded file into DataFrame
-    data = pd.read_csv(uploaded_file, header=None)
+    data = pd.read_csv(uploaded_file, header=None, index_col=None)
+    import pandas as pd
+
+    # Resave with no index and no header
+    data.to_csv("covtype.csv", index=False, header=False)
+
 
     # Apply the same column names as the default dataset
     columns = [
@@ -25,6 +30,8 @@ def load_uploaded_data(uploaded_file):
     data.columns = columns
     X = data.drop("Cover_Type", axis=1)
     y = data["Cover_Type"]
+
+    st.write(data.shape[1])
     return X, y
 
 def load_data(file_name = "covtype.csv"):
