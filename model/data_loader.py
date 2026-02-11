@@ -10,13 +10,8 @@ def load_uploaded_data(uploaded_file):
     as the default covtype dataset.
     """
     # Read uploaded file into DataFrame
-    data = pd.read_csv(uploaded_file, header=None, index_col=None)
-    import pandas as pd
-
-    # Resave with no index and no header
-    data.to_csv("covtype.csv", index=False, header=False)
-
-
+    data = pd.read_csv(uploaded_file, header=None)
+    
     # Apply the same column names as the default dataset
     columns = [
         "Elevation", "Aspect", "Slope", "Horizontal_Distance_To_Hydrology",
