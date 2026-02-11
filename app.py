@@ -27,7 +27,7 @@ if run_button:
     if uploaded_file is not None:
         st.success("Using uploaded file for training and evaluation.")
         # Train on default dataset 
-        X, y = load_data(uploaded_file)
+        X, y = load_data("covtype.csv")
         X_train_scaled, X_test_scaled_default, y_train, y_test_default, scaler = preprocess_data(X, y)
 
         # Load uploaded test data and scale with same scaler 
