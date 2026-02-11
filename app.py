@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
-from model.data_loader import load_data, preprocess_data
+from model.data_loader import load_data, preprocess_data, load_uploaded_data
 import model.utils as utils
 
 st.title("🌲 Multi-Class Classification with ML Models")
@@ -26,7 +26,7 @@ if run_button:
     # -------------------------------
     if uploaded_file is not None:
         st.success("Using uploaded file for training and evaluation.")
-        X, y = load_data(uploaded_file)
+        X, y = load_uploaded_data(uploaded_file)
     else:
         st.info("No file uploaded. Running model on the inbuilt dataset: **forest_cover_data**")
         X, y = load_data("covtype.csv")
