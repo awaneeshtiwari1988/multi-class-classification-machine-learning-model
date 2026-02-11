@@ -26,32 +26,25 @@ if run_button:
     # -------------------------------
     if uploaded_file is not None:
         st.success("Using uploaded file for training and evaluation.")
-        X, y = load_uploaded_data(uploaded_file)
+        # Train on default dataset 
+        X, y = load_data(uploaded_file)
+        X_train_scaled, X_test_scaled_default, y_train, y_test_default, scaler = preprocess_data(X, y)
+
+        # Load uploaded test data and scale with same scaler 
+        X_test_uploaded, y_test_uploaded = utils.load_uploaded_test_data(uploaded_file)
+        X_test_scaled = scaler.transform(X_test_uploaded)
+        y_test = y_test_uploaded
     else:
         st.info("No file uploaded. Running model on the inbuilt dataset: **forest_cover_data**")
         X, y = load_data("covtype.csv")
-
-    # Preprocess
-    X_train_scaled, X_test_scaled, y_train, y_test = preprocess_data(X, y)
+        X_train_scaled, X_test_scaled, y_train, y_test, scaler = preprocess_data(X, y)
 
     # -------------------------------
     # Train model
     # -------------------------------
     progress_placeholder = st.empty() 
     progress_placeholder.subheader("Training Progress")
-    if model_choice == "Logistic Regression":
-        model = logistic_regression.train_logistic(X_train_scaled, y_train, max_iter=200, batch_fraction=0.2)
-    elif model_choice == "Decision Tree":
-        model = decision_tree.train_decision_tree(X_train_scaled, y_train)
-    elif model_choice == "KNN":
-        model = knn.train_knn(X_train_scaled, y_train)
-    elif model_choice == "Naive Bayes":
-        model = naive_bayes.train_naive_bayes(X_train_scaled, y_train)
-    elif model_choice == "Random Forest":
-        model = random_forest.train_random_forest(X_train_scaled, y_train)
-    elif model_choice == "XGBoost":
-        model = xgboost.train_xgboost(X_train_scaled, y_train)
-    # Once training completes, update the placeholder 
+    model = utils.train_model(model_choice, X_train_scaled, y_train)
     progress_placeholder.subheader("✅ Training completed")
 
     # -------------------------------

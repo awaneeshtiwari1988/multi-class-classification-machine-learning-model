@@ -7,8 +7,29 @@ from sklearn.metrics import (
     f1_score, matthews_corrcoef, roc_auc_score,
     confusion_matrix, classification_report, roc_curve, auc
 )
+from model import logistic_regression, decision_tree, knn, naive_bayes, random_forest, xgboost
 from sklearn.preprocessing import label_binarize
 import streamlit as st
+
+def train_model(model_choice, X_train, y_train):
+    """
+    Train a model based on the user's choice.
+    Returns the trained model.
+    """
+    if model_choice == "Logistic Regression":
+        return logistic_regression.train_logistic(X_train, y_train, max_iter=200, batch_fraction=0.2)
+    elif model_choice == "Decision Tree":
+        return decision_tree.train_decision_tree(X_train, y_train)
+    elif model_choice == "KNN":
+        return knn.train_knn(X_train, y_train)
+    elif model_choice == "Naive Bayes":
+        return naive_bayes.train_naive_bayes(X_train, y_train)
+    elif model_choice == "Random Forest":
+        return random_forest.train_random_forest(X_train, y_train)
+    elif model_choice == "XGBoost":
+        return xgboost.train_xgboost(X_train, y_train)
+    else:
+        raise ValueError(f"Unsupported model choice: {model_choice}")
 
 def evaluate_model(model, X_test, y_test, label_offset=1):
     # Shift labels for AUC calculation 
