@@ -75,6 +75,9 @@ if run_button:
         model = load_model(model_choice)
     else:
         # Train fresh if needed (optional demonstration)
+        if X_train_scaled is None or y_train is None: 
+            X, y = load_data("covtype.csv")
+            X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y)
         model = utils.train_model(model_choice, X_train_scaled, y_train)
     
     progress_placeholder.subheader("✅ Training completed")
