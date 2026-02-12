@@ -53,11 +53,11 @@ use_pretrained = st.sidebar.checkbox("Use Pretrained Models (.pkl)", value=True)
 run_button = st.button("Run Model")
 
 if run_button:
-    scaler = joblib.load("models/scaler.pkl")
     # -------------------------------
     # Data loading logic
     # -------------------------------
     if uploaded_file is not None:
+        scaler = joblib.load("models/scaler.pkl")
         X_test_uploaded, y_test_uploaded = load_uploaded_data(uploaded_file)
         X_test_scaled = scaler.transform(X_test_uploaded)
         y_test = y_test_uploaded
@@ -71,7 +71,7 @@ if run_button:
     # -------------------------------
     progress_placeholder = st.empty() 
     progress_placeholder.subheader("Training Progress")
-    
+    st.write("Value of "+use_pretrained)
     if use_pretrained:
         model = load_model(model_choice)
     else:
