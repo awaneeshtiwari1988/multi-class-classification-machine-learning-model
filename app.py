@@ -16,7 +16,6 @@ model_choice = st.sidebar.selectbox(
 # File uploader
 uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
-test_path = ""
 if "startup_done" not in st.session_state:
     # Run only once at app startup
     X, y = load_data()
@@ -26,9 +25,10 @@ if "startup_done" not in st.session_state:
     st.session_state.scaler = scaler
     st.session_state.X_test_scaled = X_test_scaled
     st.session_state.y_test = y_test
+    st.session_state.test_path = test_path
 
 # Provide download link for test.csv 
-with open(test_path, "rb") as f: 
+with open(st.session_state.test_path, "rb") as f: 
     st.download_button(label="Download standardized test.csv", data=f, file_name="test.csv", mime="text/csv" )
 
 
