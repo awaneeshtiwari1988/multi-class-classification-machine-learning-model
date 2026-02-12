@@ -26,6 +26,7 @@ if "startup_done" not in st.session_state:
     st.session_state.X_test_scaled = X_test_scaled
     st.session_state.X_train_scaled = X_train_scaled
     st.session_state.y_test = y_test
+    st.session_state.y_train = y_train
     st.session_state.test_path = test_path
 
 # Provide download link for test.csv 
