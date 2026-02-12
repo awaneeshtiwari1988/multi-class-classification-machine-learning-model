@@ -16,7 +16,7 @@ model_choice = st.sidebar.selectbox(
 # File uploader
 uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
-test_path = None
+test_path = ""
 if "startup_done" not in st.session_state:
     # Run only once at app startup
     X, y = load_data()
