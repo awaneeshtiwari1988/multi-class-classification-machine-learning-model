@@ -13,9 +13,6 @@ model_choice = st.sidebar.selectbox(
     ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes", "Random Forest", "XGBoost"]
 )
 
-# File uploader
-uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
-
 # Load and preprocess data at startup 
 X, y = load_data() 
 X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y, save_test=True) 
@@ -23,6 +20,9 @@ X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_d
 # Provide download link for test.csv 
 with open(test_path, "rb") as f: 
     st.download_button(label="Download standardized test.csv", data=f, file_name="test.csv", mime="text/csv" )
+
+# File uploader
+uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
 # -----------------------------
 # Helper functions
