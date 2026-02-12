@@ -13,16 +13,21 @@ model_choice = st.sidebar.selectbox(
     ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes", "Random Forest", "XGBoost"]
 )
 
-# Load and preprocess data at startup 
-X, y = load_data() 
-X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y, save_test=True) 
+# File uploader
+uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
+
+if "startup_done" not in st.session_state:
+    # Run only once at app startup
+    X, y = load_data()
+    X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y, save_test=True)
+    st.session_state.startup_done = True
+    st.session_state.scaler = scaler
+    st.session_state.X_test_scaled = X_test_scaled
+    st.session_state.y_test = y_test
 
 # Provide download link for test.csv 
 with open(test_path, "rb") as f: 
     st.download_button(label="Download standardized test.csv", data=f, file_name="test.csv", mime="text/csv" )
-
-# File uploader
-uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
 # -----------------------------
 # Helper functions
