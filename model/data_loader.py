@@ -30,10 +30,12 @@ def load_data(file_name = "covtype.csv"):
     if os.path.exists(file_path): 
         st.write("Loading dataset from local file...") 
         data = pd.read_csv(file_path, header=None) 
+        st.success("✅ Dataset load complete (local file).")
     else: 
         st.write("Downloading dataset from UCI repository...") 
         data = pd.read_csv(uci_url, header=None, compression="gzip") 
         data.to_csv(file_path, index=False, header=False)
+        st.success("✅ Dataset download and load complete (UCI).")
 
     # Column names from UCI documentation
     columns = [
