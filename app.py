@@ -71,7 +71,6 @@ if run_button:
     # -------------------------------
     progress_placeholder = st.empty() 
     progress_placeholder.subheader("Training Progress")
-    st.write(use_pretrained)
     if use_pretrained:
         model = load_model(model_choice)
     else:
