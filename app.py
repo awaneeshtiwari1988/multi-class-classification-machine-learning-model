@@ -56,7 +56,7 @@ if run_button:
     else:
         st.info("No file uploaded. Running model on the inbuilt dataset: **forest_cover_data**")
         X, y = load_data("covtype.csv")
-        X_train_scaled, X_test_scaled, y_train, y_test, scaler = preprocess_data(X, y)
+        X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y)
 
     # -------------------------------
     # Train model
