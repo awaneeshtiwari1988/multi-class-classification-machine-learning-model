@@ -16,6 +16,14 @@ model_choice = st.sidebar.selectbox(
 # File uploader
 uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
+# Load and preprocess data at startup 
+X, y = load_data() 
+X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y, save_test=True) 
+
+# Provide download link for test.csv 
+with open(test_path, "rb") as f: 
+    st.download_button(label="Download standardized test.csv", data=f, file_name="test.csv", mime="text/csv" )
+
 # -----------------------------
 # Helper functions
 # -----------------------------
@@ -55,11 +63,13 @@ if run_button:
     # -------------------------------
     progress_placeholder = st.empty() 
     progress_placeholder.subheader("Training Progress")
+    
     if use_pretrained:
         model = load_model(model_choice)
     else:
         # Train fresh if needed (optional demonstration)
         model = utils.train_model(model_choice, X_test_scaled, y_test)
+    
     progress_placeholder.subheader("✅ Training completed")
 
     # -------------------------------
