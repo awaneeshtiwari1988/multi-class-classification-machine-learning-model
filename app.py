@@ -56,6 +56,10 @@ if run_button:
     # -------------------------------
     # Data loading logic
     # -------------------------------
+    # Initialize variables so they exist in scope 
+    X_train_scaled, y_train = None, None 
+    X_test_scaled, y_test = None, None 
+    scaler = None
     if uploaded_file is not None:
         scaler = joblib.load("models/scaler.pkl")
         X_test_uploaded, y_test_uploaded = load_uploaded_data(uploaded_file)
@@ -74,7 +78,12 @@ if run_button:
     if use_pretrained:
         model = load_model(model_choice)
     else:
-        # Train fresh if needed (optional demonstration)
+        if X_train_scaled is not None and y_train is not None: 
+            model = utils.train_model(model_choice, X_train_scaled, y_train) 
+        else: 
+            st.warning("Fresh training is not possible with uploaded test data. Using pretrained model instead.") 
+            model = load_model(model_choice)
+        # Train fresh if needed
         model = utils.train_model(model_choice, X_train_scaled, y_train)
     
     progress_placeholder.subheader("✅ Training completed")
@@ -84,7 +93,6 @@ if run_button:
     # -------------------------------
     eval_placeholder = st.empty() 
     eval_placeholder.subheader("Evaluation started...")
-    # For models like XGBoost that require 0-based labels, pass label_offset=1 
     metrics = utils.evaluate_model(model, X_test_scaled, y_test, label_offset=1 if model_choice == "XGBoost" else 0)
     eval_placeholder.subheader("✅ Evaluation completed")
 
