@@ -78,7 +78,7 @@ if run_button:
     if use_pretrained:
         model = load_model(model_choice)
     else:
-        if X_train_scaled is not None and y_train is not None: 
+        if X_train_scaled is not None and y_train is not None:
             model = utils.train_model(model_choice, X_train_scaled, y_train) 
         else: 
             st.warning("Fresh training is not possible with uploaded test data. Using pretrained model instead.") 
