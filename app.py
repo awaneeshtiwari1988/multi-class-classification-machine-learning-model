@@ -24,6 +24,7 @@ if "startup_done" not in st.session_state:
     st.session_state.startup_done = True
     st.session_state.scaler = scaler
     st.session_state.X_test_scaled = X_test_scaled
+    st.session_state.X_train_scaled = X_train_scaled
     st.session_state.y_test = y_test
     st.session_state.test_path = test_path
 
@@ -75,9 +76,8 @@ if run_button:
         model = load_model(model_choice)
     else:
         # Train fresh if needed (optional demonstration)
-        if X_train_scaled is None or y_train is None: 
-            X, y = load_data("covtype.csv")
-            X_train_scaled, X_test_scaled, y_train, y_test, scaler, test_path = preprocess_data(X, y)
+        X_train_scaled = st.session_state.X_train_scaled
+        y_train = st.session_state.y_train
         model = utils.train_model(model_choice, X_train_scaled, y_train)
     
     progress_placeholder.subheader("✅ Training completed")
