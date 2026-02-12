@@ -26,16 +26,18 @@ def load_data(file_name = "covtype.csv"):
 
     uci_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/covtype/covtype.data.gz" 
     
+    progress_placeholder = st.empty()
+
     # Check if file exists locally 
     if os.path.exists(file_path): 
-        st.write("Loading dataset from local file...") 
+        progress_placeholder.subheader("Loading dataset from local file...")
         data = pd.read_csv(file_path, header=None) 
-        st.success("✅ Dataset load complete (local file).")
+        progress_placeholder.subheader("✅ Dataset load complete (local file).")
     else: 
-        st.write("Downloading dataset from UCI repository...") 
+        progress_placeholder.subheader("Downloading dataset from UCI repository...") 
         data = pd.read_csv(uci_url, header=None, compression="gzip") 
         data.to_csv(file_path, index=False, header=False)
-        st.success("✅ Dataset download and load complete (UCI).")
+        progress_placeholder.subheader("✅ Dataset download and load complete (UCI).")
 
     # Column names from UCI documentation
     columns = [
