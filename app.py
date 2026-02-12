@@ -76,7 +76,7 @@ if run_button:
         model = load_model(model_choice)
     else:
         # Train fresh if needed (optional demonstration)
-        model = utils.train_model(model_choice, X_test_scaled, y_test)
+        model = utils.train_model(model_choice, X_train_scaled, y_train)
     
     progress_placeholder.subheader("✅ Training completed")
 
