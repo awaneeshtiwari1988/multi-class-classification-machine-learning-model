@@ -13,6 +13,13 @@ model_choice = st.sidebar.selectbox(
     ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes", "Random Forest", "XGBoost"]
 )
 
+# Conditionally show checkbox only for lightweight models
+if model_choice in ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes"]:
+    use_pretrained = st.sidebar.checkbox("Use Pretrained Models (.pkl)", value=True)
+else:
+    use_pretrained = False
+    st.sidebar.info("Pretrained models are not available for Random Forest and XGBoost due to large file size. These will always be trained fresh.")
+
 # File uploader
 uploaded_file = st.file_uploader("Upload Test Data CSV", type=["csv"])
 
@@ -49,7 +56,7 @@ def load_model(model_choice):
     }
     return joblib.load(filename_map[model_choice])
 
-use_pretrained = st.sidebar.checkbox("Use Pretrained Models (.pkl)", value=True)
+# use_pretrained = st.sidebar.checkbox("Use Pretrained Models (.pkl)", value=True)
 
 # Execution button
 run_button = st.button("Run Model")
