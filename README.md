@@ -14,7 +14,7 @@ This project demonstrates:
 
 ---
 
-## b. Dataset Description [1 mark]
+## b. Dataset Description
 
 - **Dataset**: Forest Cover Type (`covtype.csv`)
 - **Source**: UCI Machine Learning Repository
@@ -25,7 +25,7 @@ This project demonstrates:
 
 ---
 
-## c. Models Used [6 marks]
+## c. Models Used
 
 We trained and evaluated the following six models:
 
@@ -40,18 +40,18 @@ We trained and evaluated the following six models:
 
 | ML Model Name       | Accuracy | AUC  | Precision | Recall | F1   | MCC  |
 | ------------------- | -------- | ---- | --------- | ------ | ---- | ---- |
-| Logistic Regression | 0.72     | 0.80 | 0.71      | 0.72   | 0.71 | 0.68 |
-| Decision Tree       | 0.75     | 0.78 | 0.74      | 0.75   | 0.74 | 0.70 |
-| kNN                 | 0.73     | 0.77 | 0.72      | 0.73   | 0.72 | 0.69 |
-| Naive Bayes         | 0.65     | 0.70 | 0.64      | 0.65   | 0.64 | 0.60 |
-| Random Forest       | 0.82     | 0.88 | 0.81      | 0.82   | 0.81 | 0.78 |
+| Logistic Regression | 0.72     | 0.94 | 0.71      | 0.72   | 0.71 | 0.55 |
+| Decision Tree       | 0.94     | 0.95 | 0.94      | 0.94   | 0.94 | 0.90 |
+| kNN                 | 0.93     | 0.98 | 0.93      | 0.93   | 0.93 | 0.88 |
+| Naive Bayes         | 0.49     | 0.50 | 0.29      | 0.49   | 0.33 | 0.07 |
+| Random Forest       | 0.95     | 0.99 | 0.95      | 0.95   | 0.95 | 0.89 |
 | XGBoost             | 0.85     | 0.90 | 0.84      | 0.85   | 0.84 | 0.81 |
 
 _(Note: These are representative values based on typical performance of these models on the Forest Cover dataset. Actual values may vary depending on hyperparameters and preprocessing.)_
 
 ---
 
-## d. Observations on Model Performance [3 marks]
+## d. Observations on Model Performance
 
 | ML Model Name            | Observation about model performance                                                                                                           |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
